@@ -27,7 +27,7 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost", '127.0.0.1']
+ALLOWED_HOSTS = ["localhost", '127.0.0.1', 'shoosterman-dealership-app.us-east.cf.appdomain.cloud']
 
 
 # Application definition
