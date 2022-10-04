@@ -1,11 +1,11 @@
   applications:
-  - name: djangoapp
+  - name: dealershipapp
     routes:
-      - route: $HOST.$DOMAIN
+      - route: shoosterman-dealership-app.us-east.cf.appdomain.cloud
     memory: 128M
     buildpack: python_buildpack
-  - name: djangoapp-nginx
+  - name: dealershipapp-nginx
     routes:
-      - route: $HOST.$DOMAIN/static
+      - route: shoosterman-dealership-app.us-east.cf.appdomain.cloud/static
     memory: 128M
     buildpack: staticfile_buildpack
