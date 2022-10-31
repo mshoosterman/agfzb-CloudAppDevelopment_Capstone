@@ -90,9 +90,6 @@ def registration_request(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
-    # context = {}
-    # if request.method == "GET":
-    #    return render(request, 'djangoapp/index.html', context)
     if request.method == "GET":
         dealerships = get_dealers_from_cf(get_dealers_url)
         context = {"dealerships": dealerships}
@@ -128,18 +125,18 @@ def add_review(request, id):
             review = {}
             review["name"] = request.user.first_name + " " + request.user.last_name
             form = request.POST
-            review["delaership"] = id
+            review["dealership"] = id
             review["review"] = form["content"]
             if form.get("purchasecheck") == "on":
                 review["purchase"] = True
             else:
                 review["purchase"] = False
             if review["purchase"]:
-                review["purchase_date"] = datetime.striptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
+                review["purchase_date"] = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
                 car = CarModel.objects.get(pk=form["car"])
                 review["car_make"] = car.make.name
                 review["car_model"] = car.name
-                review["car_year"] = car.year
+                review["car_year"] = car.year.strftime("%Y")
             json_payload = {"review": review}
             post_request(post_review_url, json_payload, id=id)
             return redirect("djangoapp:dealer_details", id=id)

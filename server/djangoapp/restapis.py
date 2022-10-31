@@ -128,13 +128,16 @@ def get_dealer_reviews_from_cf(url, **kwargs):
         reviews = json_result["body"]["data"]["docs"]
 
         for dealer_review in reviews:
-            sentiment = analyze_review_sentiments(dealer_review["review"])
+            try:
+                sentiment = analyze_review_sentiments(dealer_review["review"])
+            except:
+                sentiment = None
             review_obj = DealerReview(dealership=dealer_review["dealership"],
                                       name=dealer_review["name"],
                                       purchase=dealer_review["review"],
                                       review=dealer_review["review"],
                                       sentiment=sentiment,
-                                      id=dealer_review["id"])
+                                      id=dealer_review["_id"])
             if "car_make" in dealer_review:
                 review_obj.add_car(car_model=dealer_review["car_model"],
                                    car_make=dealer_review["car_make"],
@@ -150,17 +153,18 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 def analyze_review_sentiments(text):
     # - Call get_request() with specified arguments
     # - Get the returned sentiment label such as Positive or Negative
-    url = ""
-    api_key = ""
+    url = "https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/5ca4a2b8-d111-4117-a0db-a2d5a8488382"
+    api_key = "BSESGUHUSO-okpo9AJvR2zlTOHY3BEH0zPqIZENfWs9I"
     authenticator = IAMAuthenticator(api_key)
     natural_language_understanding = NaturalLanguageUnderstandingV1(version='2022-08-01', authenticator=authenticator)
+    natural_language_understanding.set_service_url(url)
     # new_text adds some neutral phrases to the string text to resolve an issue with NLU not returning results
     # when given strings that are too short.
     new_text = text + " hello hello hello"
     response = natural_language_understanding.analyze(text=new_text,
                                                       features=Features(
                                                           sentiment=SentimentOptions(targets=[new_text]))).get_result()
-    response = json.dumps(response, indent=2)
+    label = json.dumps(response, indent=2) # The fuck does this line do then?
     label = response['sentiment']['document']['label']
 
     return label

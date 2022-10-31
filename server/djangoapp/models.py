@@ -76,7 +76,7 @@ class DealerReview:
     def __init__(self, dealership, name, purchase, review, sentiment, id):
         self.dealership = dealership
         self.name = name
-        self.purchase = purchase
+        self.purchase = purchase    # Should be True or False
         self.review = review
         self.purchase_date = None
         self.car_make = None
